@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # Puerto expuesto (coincide con server.js)
-EXPOSE 5000
+EXPOSE 3000
 
 # Comando por defecto
 CMD ["npm", "start"]
