@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/minimal.css";
+import "../styles/minimal.css";
 
 const Expediente = () => {
     // estado para todos los expedientes
@@ -219,7 +219,7 @@ const Expediente = () => {
                 {expedientes.map((exp) => (
                     <tr key={exp.COD_EXPEDIENTE}>
                         <td>{exp.COD_EXPEDIENTE}</td>
-                        <td className="text-muted-small">{exp.FECHA_REGISTRO_EXPEDIENTE}</td>
+                        <td className="text-muted-small">{new Date(exp.FECHA_REGISTRO_EXPEDIENTE).toLocaleDateString("es-GT")}</td>
                         <td>{exp.NOMBRE_ESTADO_EXPEDIENTE}</td>
                         <td>{exp.NOMBRE_ETAPA_EXPEDIENTE}</td>
                         <td className="text-muted-small">{exp.JUSTIFICACION_RECHAZO_EXPEDIENTE}</td>
@@ -319,6 +319,7 @@ const Expediente = () => {
                                                 className="form-control"
                                                 value={indicioForm.TamanioIndicio}
                                                 onChange={(e) => setIndicioForm({ ...indicioForm, TamanioIndicio: e.target.value })}
+                                                required
                                             />Centímetro
                                         </div>
                                         <hr/>
@@ -330,6 +331,7 @@ const Expediente = () => {
                                                 className="form-control"
                                                 value={indicioForm.PesoIndicio}
                                                 onChange={(e) => setIndicioForm({ ...indicioForm, PesoIndicio: e.target.value })}
+                                                required
                                             />Libras
                                         </div>
                                     <hr/>
@@ -339,6 +341,7 @@ const Expediente = () => {
                                             className="form-control"
                                             value={indicioForm.UbicacionIndicio}
                                             onChange={(e) => setIndicioForm({ ...indicioForm, UbicacionIndicio: e.target.value })}
+                                            required
                                         />
                                     </div>
                                 </div>

@@ -3,7 +3,8 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/minimal.css";
+import ReporteExpediente from "./ReporteExpediente";
+import "../styles/minimal.css";
 
 const ExpedienteCoordinador = () => {
     const [expedientes, setExpedientes] = useState([]);
@@ -17,21 +18,21 @@ const ExpedienteCoordinador = () => {
     const [rejectJustificacion, setRejectJustificacion] = useState("");
     const [rejecting, setRejecting] = useState(false);
 
+    const [showReportModal, setShowReportModal] = useState(false);
+
     useEffect(() => {
         fetchExpedientes();
     }, []);
 
     const fetchExpedientes = async () => {
+
         try {
             const response = await axios.get(process.env.REACT_APP_API_URL_EXP_COOR);
-            // ajustar si tu backend devuelve otra estructura
-            const raw = response?.data;
-            const list = Array.isArray(raw) ? raw : (Array.isArray(raw?.dicriData) ? raw.dicriData : (raw?.data || []));
-            setExpedientes(list);
+            // Ajusta según la estructura real de respuesta
+            setExpedientes(response.data.dicriData);
         } catch (error) {
-            console.error("fetchExpedientes error:", error);
             toast.error("Error al obtener los expedientes");
-            setExpedientes([]);
+            console.error(error);
         }
     };
 
@@ -39,15 +40,12 @@ const ExpedienteCoordinador = () => {
         setSelectedExpedienteCode(codigo);
         setShowViewIndiciosModal(true);
         try {
-            const url = `${process.env.REACT_APP_API_URL_INDICIOS_LIST}/${encodeURIComponent(codigo)}`;
-            const response = await axios.get(url);
-            const raw = response?.data;
-            const list = Array.isArray(raw) ? raw : (Array.isArray(raw?.dicriData) ? raw.dicriData : (Array.isArray(raw?.indicios) ? raw.indicios : (raw?.data || [])));
-            setIndiciosList(list);
-            if (!list.length) toast.info("No hay indicios registrados para este expediente");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL_INDICIOS_LIST}/${codigo}`);
+            console.log(response);
+            setIndiciosList(response.data.dicriData);
         } catch (error) {
-            console.error("openViewIndiciosModal error:", error);
             toast.error("Error al obtener indicios");
+            console.error(error);
             setIndiciosList([]);
         }
     };
@@ -59,7 +57,6 @@ const ExpedienteCoordinador = () => {
     };
 
     const aprobarExpediente = async (codigoExpediente) => {
-        if (!codigoExpediente) return toast.error("Código de expediente no proporcionado");
         try {
             const payload = {
                 CodExpediente: codigoExpediente,
@@ -67,20 +64,17 @@ const ExpedienteCoordinador = () => {
                 EtapaExp: 3,
                 JustificacionRechazo: null
             };
-            const url = `${process.env.REACT_APP_API_URL_TRASLADO}/${encodeURIComponent(codigoExpediente)}`;
-            const response = await axios.put(url, payload);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL_TRASLADO}/${codigoExpediente}`, payload);
             console.log("aprobarExpediente response:", response?.data);
             toast.success("Expediente aprobado y finalizado");
             fetchExpedientes();
         } catch (error) {
             console.error("aprobarExpediente error:", error);
-            const detail = error.response?.data?.message || error.response?.data || error.message || "Error desconocido";
-            toast.error("Error al aprobar el expediente: " + (typeof detail === "string" ? detail : JSON.stringify(detail)));
+            toast.error("Error al aprobar el expediente: ", error);
         }
     };
 
     const rechazarExpediente = async (codigoExpediente, justificacion = null) => {
-        if (!codigoExpediente) return toast.error("Código de expediente no proporcionado");
         try {
             const payload = {
                 CodExpediente: codigoExpediente,
@@ -88,8 +82,7 @@ const ExpedienteCoordinador = () => {
                 EtapaExp: 1,
                 JustificacionRechazo: justificacion
             };
-            const url = `${process.env.REACT_APP_API_URL_TRASLADO}/${encodeURIComponent(codigoExpediente)}`;
-            const response = await axios.put(url, payload);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL_TRASLADO}/${codigoExpediente}`, payload);
             console.log("rechazarExpediente response:", response?.data);
             toast.success("Expediente rechazado");
             fetchExpedientes();
@@ -129,13 +122,17 @@ const ExpedienteCoordinador = () => {
         }
     };
 
+    const verReporte = () => {
+        setShowReportModal(true);
+    };
+
     return (
         <div className="container mt-5">
             <h1 className="mb-3">Expedientes - Etapa Coordinación</h1>
             <button className="btn btn-outline-danger mb-3 btn-sm"
-            // onClick={() => crearNuevoExpediente()}
+             onClick={() => verReporte()}
             >
-                Crear Reportes
+                Ver Reportes
             </button>
             <table className="table table-sm table-hover align-middle">
                 <thead>
@@ -152,7 +149,7 @@ const ExpedienteCoordinador = () => {
                     {expedientes.map((exp) => (
                         <tr key={exp.COD_EXPEDIENTE || exp.id || JSON.stringify(exp)}>
                             <td>{exp.COD_EXPEDIENTE}</td>
-                            <td className="text-muted-small">{exp.FECHA_REGISTRO_EXPEDIENTE}</td>
+                            <td className="text-muted-small">{new Date(exp.FECHA_REGISTRO_EXPEDIENTE).toLocaleDateString("es-GT")}</td>
                             <td>{exp.NOMBRE_ESTADO_EXPEDIENTE}</td>
                             <td>{exp.NOMBRE_ETAPA_EXPEDIENTE}</td>
                             <td className="text-muted-small">{exp.CANTIDAD_INDICIO}</td>
@@ -265,6 +262,10 @@ const ExpedienteCoordinador = () => {
                         </form>
                     </div>
                 </div>
+            )}
+
+            {showReportModal && (
+                <ReporteExpediente onClose={() => setShowReportModal(false)} />
             )}
 
             <ToastContainer />

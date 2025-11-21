@@ -1,6 +1,6 @@
 import './App.css';
-import ExpedienteTecnico from './ExpedienteTecnico';
-import ExpedienteCoordinador from './ExpedienteCoordinador';
+import ExpedienteTecnico from './components/ExpedienteTecnico';
+import ExpedienteCoordinador from './components/ExpedienteCoordinador';
 
 function App() {
   return (

@@ -8,6 +8,7 @@ const {addExpediente} = require('./control/addExpediente.js');
 const {addIndicio} = require('./control/addIndicio.js');
 const {updateTrasladoExpediente} = require('./control/updateExpediente.js');
 const {updateIndicio, anularIndicio} = require('./control/updateIndicio.js');
+const {getExpedientesReporte} = require('./comuns/getReporte.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,3 +35,6 @@ app.post("/api/dicri/indicios/add", addIndicio);
 app.put("/api/dicri/expedientes/traslado/:codExpediente", updateTrasladoExpediente);
 app.put("/api/dicri/indicios/update/:codIndicio", updateIndicio);
 app.put("/api/dicri/indicios/anular/:codIndicio", anularIndicio);
+
+//----------Definicion de los REPORTES a utilizar
+app.get("/api/dicri/reporte/:estadoExpediente/:fechaRegistro", getExpedientesReporte);
