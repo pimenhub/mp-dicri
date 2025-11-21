@@ -6,6 +6,9 @@ WORKDIR /api
 # Copiar definiciones de dependencias primero (caching)
 COPY package*.json ./
 
+# Instalar dependencias
+RUN npm install
+
 # Copiar el resto del código
 COPY . .
 
