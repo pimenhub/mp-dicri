@@ -4,9 +4,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/minimal.css";
+import { useUser } from '@clerk/clerk-react';
 
 const Expediente = () => {
     // estado para todos los expedientes
+
+    const {user} = useUser();
+
     const [expedientes, setExpedientes] = useState([]);
 
     // modales y estados para indicios
@@ -47,7 +51,7 @@ const Expediente = () => {
     const crearNuevoExpediente = async () => {
         try {
             const payload = {
-                UsuarioRegistro: "JPIMENTEL",
+                UsuarioRegistro: user?.firstName,
                 EstadoExp: 1,
                 EtapaExp: 1
             };
@@ -97,7 +101,7 @@ const Expediente = () => {
                 TamanioIndicio: indicioForm.TamanioIndicio === "" ? null : parseFloat(indicioForm.TamanioIndicio),
                 PesoIndicio: indicioForm.PesoIndicio === "" ? null : parseFloat(indicioForm.PesoIndicio),
                 UbicacionIndicio: indicioForm.UbicacionIndicio || null,
-                UsuarioRegistro: indicioForm.UsuarioRegistro || "JPIMENTEL",
+                UsuarioRegistro: indicioForm.UsuarioRegistro || user?.firstName,
                 EstadoIndicio: indicioForm.EstadoIndicio || 1
             };
 
@@ -200,7 +204,7 @@ const Expediente = () => {
             <h1 className="mb-3">Expedientes - Etapa Técnica</h1>
             <button className="btn btn-outline-primary mb-3 btn-sm"
             onClick={() => crearNuevoExpediente()}>
-                Crear Nuevo
+                Crear Nuevo Expediente
             </button>
 
             <table className="table table-sm table-hover align-middle">

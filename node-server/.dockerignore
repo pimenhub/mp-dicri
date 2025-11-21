@@ -1,7 +1,6 @@
 # Ignorar dependencias locales y archivos innecesarios
 node_modules
 npm-debug.log
-package-lock.json
 
 # Configs locales y secretos
 .env
