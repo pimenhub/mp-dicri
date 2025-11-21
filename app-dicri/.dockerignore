@@ -1,0 +1,11 @@
+# Ignorar dependencias locales y archivos innecesarios
+node_modules
+npm-debug.log
+
+# VCS, editores y config del sistema
+.git
+.vscode
+.DS_Store
+docker-compose.yml
+Dockerfile
+.idea
