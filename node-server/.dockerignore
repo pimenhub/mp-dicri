@@ -2,11 +2,6 @@
 node_modules
 npm-debug.log
 
-# Configs locales y secretos
-.env
-.env.local
-.env.*.local
-
 # VCS, editores y config del sistema
 .git
 .vscode
