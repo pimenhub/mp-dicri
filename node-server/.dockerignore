@@ -1,0 +1,17 @@
+# Ignorar dependencias locales y archivos innecesarios
+node_modules
+npm-debug.log
+package-lock.json
+
+# Configs locales y secretos
+.env
+.env.local
+.env.*.local
+
+# VCS, editores y config del sistema
+.git
+.vscode
+.DS_Store
+docker-compose.yml
+Dockerfile
+.idea
