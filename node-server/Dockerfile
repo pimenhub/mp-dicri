@@ -1,5 +1,8 @@
 FROM alpine:3.21
 
+# Instalar Node.js y npm en la imagen base Alpine
+RUN apk update && apk add nodejs npm
+
 # Directorio de trabajo
 WORKDIR /api
 
